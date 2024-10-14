@@ -1,0 +1,83 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="data:,">
+        <title>来場者メニュー</title>
+        <style>
+            .h3{
+                width: 100%;
+                text-align: center;
+                background-color: aqua;
+                margin: 0;
+                font-size: 30px;
+            }
+            .label{
+                margin: 0;
+                display: flex;
+                justify-content: space-around;
+            }
+            .top{
+                background-color: aqua;
+                display: flex;
+                justify-content: space-between;
+            }
+            body{
+                margin: 0;
+            }
+            .login{
+
+            }
+            .body{
+                display: flex;
+                justify-content: space-between;
+            }
+            p{
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <label class="top">
+            <div></div>
+            <h1>タイトル</h3>
+            <div>a</div>
+        </label>
+        <label class="body">
+            <label>
+                <P>現在の待ち時間:</P>
+                <p id="time_w"></p>
+            </label>
+            <label>
+                <a href="javascript:send_c()">予約システム</a>
+                <a href="javascript:send_q()">qrコード表示</a>
+            </label>
+            <label>
+                <input type="text">
+                <br>
+                <label class="body">
+                    <div></div>
+                    <button>ログイン</button>
+                </label>
+                <p id="login_mess"></p>
+            </label>
+        </label>
+    </body>
+    <script>
+        var id = 0
+        const url = window.location.search;
+
+        // パラメータから「username」を取得
+        if(url.substr(1,3) == "id="){
+            id = url.substr(4)
+        }
+        function send_c(uri){
+            console.log(uri)
+            location = `/contract?id=${id}`
+        }
+        function send_q(uri){
+            console.log(uri)
+            location = `/qr?id=${id}`
+        }
+    </script>
+</html>

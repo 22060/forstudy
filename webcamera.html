@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div id="videoWrap"></div>
+        <canvas id="canvas"></canvas>
+        <canvas id="canvas2"></canvas>
+    </body>
+    <script>
+        const video = document.createElement('video');
+        video.autoplay = true;
+        // 1-ii video要素をHTMLに追加する
+        document.getElementById('videoWrap').appendChild(video);
+
+        // 2-i MediaDevicesオブジェクトを用意する
+        const media = navigator.mediaDevices;
+        // 2-ii Webカメラを使っていいかユーザに聞く
+        const constraints = { audio: false, video: true };
+        media.getUserMedia(constraints)
+        .then(function (stream) {
+            video.srcObject = stream;
+            setTimeout(test, 1);
+            console.log(stream)
+        });
+        console.log(media.getUserMedia(constraints))
+        function test() {
+                var canvas = document.getElementById('canvas');
+                var ctx = canvas.getContext('2d');
+                var w = video.offsetWidth;
+                var h = video.offsetHeight;
+                canvas.setAttribute('width', w);
+                canvas.setAttribute('height', h);
+                ctx.drawImage(video, 0, 0, w, h);
+                canvas.toBlob(function(blob) {
+                    // console.log(blob)
+                var img = document.getElementById('videoWrap');
+                img.src = window.URL.createObjectURL(blob);
+                }, 'image/jpeg', 0.95);
+                console.log(ctx.getImageData(0,0,1,1))
+                const data = ctx.getImageData(0,0,w,h)
+                var canvas2 = document.getElementById('canvas2');
+                var ctx2 = canvas2.getContext('2d');
+                canvas2.setAttribute('width', w);
+                canvas2.setAttribute('height', h);
+                for(var i = 0;i <data.height;i++ ){
+                    for(var t = 0;t < data.width ;t++){
+                        // ctx2.fillStyle = `rgb(${256 - i*256/data.height},${t*256/data.width},0)`
+                        ctx2.fillstyle = `rgb(${data.data[i*t*4]},${data.data[i*t*4+1]},${data.data[i*t*4+2]})`
+                        // ctx2.fillStyle = `rgb(${data.data[i*data.width+4*t]},${data.data[i*data.width+4*t+1]},${data.data[i*data.width+4*t+2]})`;
+                        ctx2.fillRect(t,i,1,1)
+                    }
+                }
+                setTimeout(test, 100);
+                // stream.getTracks()[0].stop();
+            }
+    </script>
+</html>

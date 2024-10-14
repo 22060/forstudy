@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word List</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  .word-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  .word-item {
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    position: relative;
+  }
+  .word-item:last-child {
+    border-bottom: none;
+  }
+  .word {
+    font-weight: bold;
+  }
+  .meaning {
+    color: #666;
+  }
+  .edit-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+  }
+  form {
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<ul class="word-list" id="wordList">
+  <li class="word-item">
+    <span class="word">Apple</span>: <span class="meaning">りんご</span>
+    <button class="edit-btn" onclick="editItem(this)">Edit</button>
+  </li>
+  <li class="word-item">
+    <span class="word">Banana</span>: <span class="meaning">バナナ</span>
+    <button class="edit-btn" onclick="editItem(this)">Edit</button>
+  </li>
+</ul>
+
+<form id="wordForm">
+  <label for="word">Word:</label>
+  <input type="text" id="editWord" name="word">
+  <label for="meaning">Meaning:</label>
+  <input type="text" id="editMeaning" name="meaning">
+  <button type="submit" id="editSubmitBtn">Update</button>
+</form>
+
+<script>
+  function editItem(btn) {
+    var listItem = btn.parentNode;
+    var word = listItem.querySelector(".word").textContent;
+    var meaning = listItem.querySelector(".meaning").textContent;
+    
+    document.getElementById("editWord").value = word;
+    document.getElementById("editMeaning").value = meaning;
+    document.getElementById("wordForm").style.display = "block";
+    document.getElementById("editSubmitBtn").setAttribute("data-index", listItem.dataset.index);
+  }
+
+  document.getElementById("wordForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    var wordInput = document.getElementById("editWord");
+    var meaningInput = document.getElementById("editMeaning");
+    var word = wordInput.value.trim();
+    var meaning = meaningInput.value.trim();
+    
+    if (word !== "" && meaning !== "") {
+      var listItemIndex = document.getElementById("editSubmitBtn").getAttribute("data-index");
+      if (listItemIndex) {
+        // If editing existing item
+        var listItem = document.querySelector(`[data-index="${listItemIndex}"]`);
+        listItem.querySelector(".word").textContent = word;
+        listItem.querySelector(".meaning").textContent = meaning;
+        listItem.removeAttribute("data-index");
+      } else {
+        // If adding new item
+        var wordList = document.getElementById("wordList");
+        var listItem = document.createElement("li");
+        listItem.classList.add("word-item");
+        listItem.innerHTML = '<span class="word">' + word + '</span>: <span class="meaning">' + meaning + '</span>';
+        wordList.appendChild(listItem);
+      }
+      document.getElementById("wordForm").style.display = "none";
+      wordInput.value = "";
+      meaningInput.value = "";
+    } else {
+      alert("Please enter both word and meaning.");
+    }
+  });
+</script>
+
+</body>
+</html>
